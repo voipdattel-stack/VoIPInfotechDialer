@@ -1,0 +1,823 @@
+<title>VoIP Infotech Dialer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Instrument+Serif:ital@0;1&display=swap">
+
+<style>
+:root {
+  --bg:#080706; --sf:#141210; --sf2:#1E1B16; --sf3:#27231B;
+  --bd:#302C23; --bd2:#3E3930;
+  --amber:#F5A623; --amberD:#D4860A; --amberG:rgba(245,166,35,.12); --amberG2:rgba(245,166,35,.06);
+  --t1:#EDE8D8; --t2:#9B9282; --t3:#5A5448; --t4:#3A3530;
+  --green:#4ADE80; --red:#F87171; --blue:#60A5FA; --purple:#A78BFA;
+  color-scheme: dark;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);-webkit-font-smoothing:antialiased}
+body{display:flex;align-items:center;justify-content:center;min-height:100%;padding:24px max(16px,env(safe-area-inset-left,0px));background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(245,166,35,.06) 0%,transparent 60%),var(--bg)}
+
+/* PHONE FRAME */
+.phone{
+  width:375px;height:812px;border-radius:50px;overflow:hidden;
+  background:var(--sf);border:1px solid var(--bd2);
+  box-shadow:0 0 0 8px #0A0908,0 0 0 9px #2A2520,0 32px 80px rgba(0,0,0,.7),0 0 60px rgba(245,166,35,.06);
+  display:flex;flex-direction:column;position:relative;flex-shrink:0;
+}
+@media(max-width:420px){
+  body{padding:0;align-items:flex-start}
+  .phone{width:100vw;height:100dvh;border-radius:0;border:none;box-shadow:none}
+}
+
+/* STATUS BAR */
+.status-bar{
+  height:44px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;
+  background:var(--sf);flex-shrink:0;position:relative;z-index:10;
+}
+.sb-time{font-size:15px;font-weight:700;color:var(--t1);letter-spacing:.01em}
+.sb-icons{display:flex;align-items:center;gap:5px}
+.sb-signal{display:flex;align-items:flex-end;gap:1.5px}
+.sig-bar{width:3px;background:var(--t1);border-radius:1px}
+.sig-bar:nth-child(1){height:4px}
+.sig-bar:nth-child(2){height:6px}
+.sig-bar:nth-child(3){height:9px;opacity:.5}
+.sig-bar:nth-child(4){height:12px;opacity:.3}
+.sb-wifi{font-size:13px;color:var(--t1);opacity:.9}
+.sb-batt{width:22px;height:12px;border:1.5px solid var(--t1);border-radius:3px;position:relative;opacity:.9}
+.sb-batt::before{content:'';position:absolute;right:-5px;top:50%;transform:translateY(-50%);width:3px;height:6px;background:var(--t1);border-radius:0 2px 2px 0}
+.sb-batt::after{content:'';position:absolute;left:1px;top:1px;bottom:1px;width:70%;background:var(--t1);border-radius:1px}
+
+/* APP HEADER */
+.app-header{
+  padding:14px 20px 12px;background:var(--sf);border-bottom:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.app-logo{display:flex;align-items:center;gap:9px}
+.logo-mark{width:32px;height:32px;border-radius:9px;background:var(--amber);display:flex;align-items:center;justify-content:center;box-shadow:0 0 16px var(--amberG)}
+.app-name{font-size:16px;font-weight:700;color:var(--t1);letter-spacing:-.01em}
+.app-name span{color:var(--amber)}
+.sip-status{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--t2)}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.status-dot.on{background:var(--green);box-shadow:0 0 8px rgba(74,222,128,.5);animation:pulse 2s ease-in-out infinite}
+.status-dot.off{background:var(--red)}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.7;transform:scale(.85)}}
+
+/* CONTENT */
+.content{flex:1;overflow:hidden;position:relative}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;display:none;flex-direction:column;background:var(--bg)}
+.screen.active{display:flex}
+
+/* TAB BAR */
+.tab-bar{
+  height:84px;border-top:1px solid var(--bd);background:var(--sf);
+  display:grid;grid-template-columns:repeat(4,1fr);flex-shrink:0;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;position:relative;transition:opacity .15s}
+.tab-icon{font-size:22px;line-height:1;transition:transform .15s}
+.tab-label{font-size:10.5px;font-weight:600;color:var(--t3);letter-spacing:.03em;text-transform:uppercase;transition:color .15s}
+.tab.active .tab-icon{transform:scale(1.1)}
+.tab.active .tab-label{color:var(--amber)}
+.tab:not(.active){opacity:.7}
+.tab-badge{position:absolute;top:8px;right:calc(50% - 18px);width:18px;height:18px;border-radius:50%;background:var(--red);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--sf)}
+
+/* ── DIALPAD ── */
+.dialpad-screen{padding:0}
+.number-display{
+  padding:28px 24px 20px;text-align:center;
+  border-bottom:1px solid var(--bd);min-height:100px;
+  display:flex;align-items:center;justify-content:center;gap:12px;position:relative;
+}
+#dial-number{
+  font-size:38px;font-weight:300;color:var(--t1);letter-spacing:3px;font-variant-numeric:tabular-nums;
+  flex:1;text-align:center;min-height:48px;line-height:1.2;word-break:break-all;
+}
+#dial-number.has-value{font-size:clamp(22px,8vw,36px)}
+.dial-hint{font-size:13px;color:var(--t3);margin-top:4px}
+.dial-delete{
+  width:40px;height:40px;border-radius:50%;border:none;background:transparent;
+  color:var(--t2);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .15s;flex-shrink:0;
+}
+.dial-delete:hover{background:var(--sf3)}
+.keypad{padding:12px 20px 16px;display:flex;flex-direction:column;gap:6px}
+.keypad-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.key{
+  height:66px;border-radius:16px;border:none;background:var(--sf2);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  cursor:pointer;transition:background .1s,transform .08s;position:relative;overflow:hidden;
+}
+.key:active{background:var(--sf3);transform:scale(.95)}
+.key-num{font-size:26px;font-weight:400;color:var(--t1);line-height:1}
+.key-letters{font-size:9.5px;font-weight:700;letter-spacing:.12em;color:var(--t3);text-transform:uppercase;min-height:12px}
+.key.special{background:var(--sf3)}
+.key.special .key-num{font-size:22px;color:var(--t2)}
+.ripple{position:absolute;border-radius:50%;background:rgba(245,166,35,.2);pointer-events:none;transform:scale(0);animation:ripple .4s ease-out forwards}
+@keyframes ripple{to{transform:scale(4);opacity:0}}
+.call-row{padding:0 20px 16px;display:grid;grid-template-columns:52px 1fr 52px;gap:12px;align-items:center}
+.call-btn{
+  grid-column:2;height:72px;border-radius:36px;border:none;background:var(--green);
+  font-size:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 24px rgba(74,222,128,.4);transition:transform .1s,box-shadow .15s;
+}
+.call-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(74,222,128,.5)}
+.call-btn:active{transform:scale(.95)}
+.call-side-btn{
+  width:52px;height:52px;border-radius:50%;border:1.5px solid var(--bd);background:var(--sf2);
+  color:var(--t2);font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:.15s;
+}
+.call-side-btn:hover{border-color:var(--amber);color:var(--amber)}
+
+/* ── RECENTS ── */
+.list-screen{padding:16px 0}
+.list-header{font-size:12px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;padding:8px 20px 8px;border-bottom:1px solid var(--bd)}
+.call-item{
+  display:flex;align-items:center;gap:14px;padding:13px 20px;
+  border-bottom:1px solid var(--bd);cursor:pointer;transition:background .12s;
+}
+.call-item:hover{background:var(--sf2)}
+.call-avatar{
+  width:44px;height:44px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;
+}
+.call-info{flex:1;min-width:0}
+.call-name{font-size:15px;font-weight:600;color:var(--t1);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.call-meta{font-size:12px;color:var(--t2);display:flex;align-items:center;gap:5px}
+.call-type-icon{font-size:10px}
+.call-type-icon.out{color:var(--blue)}
+.call-type-icon.in{color:var(--green)}
+.call-type-icon.mis{color:var(--red)}
+.call-name.missed{color:var(--red)}
+.call-time{font-size:12.5px;color:var(--t3);white-space:nowrap}
+.recall-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--bd);background:transparent;color:var(--t2);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;flex-shrink:0}
+.recall-btn:hover{background:var(--amberG);border-color:var(--amber);color:var(--amber)}
+
+/* ── CONTACTS ── */
+.contacts-search{position:sticky;top:0;z-index:5;padding:12px 16px;background:var(--sf);border-bottom:1px solid var(--bd)}
+.search-input{
+  width:100%;background:var(--sf2);border:1.5px solid var(--bd);border-radius:10px;
+  padding:9px 14px 9px 36px;color:var(--t1);font-size:14.5px;font-family:inherit;outline:none;
+  transition:border-color .15s;background-image:url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='7' cy='7' r='5' stroke='%235A5448' stroke-width='1.5'/%3E%3Cpath d='M11 11l3 3' stroke='%235A5448' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:12px 50%;
+}
+.search-input:focus{border-color:var(--amber)}
+.contact-group-label{font-size:12px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;padding:8px 20px 4px;background:var(--sf2);position:sticky;top:0}
+.contact-item{display:flex;align-items:center;gap:14px;padding:11px 20px;border-bottom:1px solid var(--bd);cursor:pointer;transition:background .12s}
+.contact-item:hover{background:var(--sf2)}
+.contact-av{width:42px;height:42px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#0D0C09}
+.contact-info{flex:1;min-width:0}
+.contact-name{font-size:15px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.contact-num{font-size:12.5px;color:var(--t2);font-variant-numeric:tabular-nums}
+.contact-call-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--bd);background:transparent;color:var(--green);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+.contact-call-btn:hover{background:rgba(74,222,128,.12);border-color:var(--green)}
+
+/* ── SETTINGS ── */
+.settings-screen{padding:0}
+.settings-section{margin-bottom:0}
+.settings-label{font-size:11.5px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.1em;padding:16px 20px 8px}
+.settings-group{border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);background:var(--sf)}
+.setting-row{
+  display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--bd);
+}
+.setting-row:last-child{border-bottom:none}
+.setting-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.setting-content{flex:1;min-width:0}
+.setting-title{font-size:14.5px;font-weight:600;color:var(--t1)}
+.setting-value{font-size:12.5px;color:var(--t2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.setting-arrow{color:var(--t3);font-size:14px}
+.setting-toggle{width:46px;height:26px;border-radius:13px;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.setting-toggle.on{background:var(--amber)}
+.setting-toggle.off{background:var(--bd2)}
+.toggle-thumb{position:absolute;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s}
+.setting-toggle.on .toggle-thumb{left:23px}
+.setting-toggle.off .toggle-thumb{left:3px}
+.sip-form{padding:16px 20px;background:var(--bg);display:none;flex-direction:column;gap:10px}
+.sip-form.open{display:flex}
+.sip-field{display:flex;flex-direction:column;gap:5px}
+.sip-label{font-size:12px;font-weight:600;color:var(--t2)}
+.sip-input{background:var(--sf);border:1.5px solid var(--bd);border-radius:9px;padding:10px 13px;color:var(--t1);font-size:14px;font-family:inherit;outline:none;transition:border-color .15s}
+.sip-input:focus{border-color:var(--amber)}
+.sip-save{background:var(--amber);color:#0D0C09;border:none;border-radius:9px;padding:12px;font-size:14.5px;font-weight:700;cursor:pointer;width:100%;margin-top:4px;transition:opacity .15s}
+.sip-save:hover{opacity:.88}
+
+/* ── IN-CALL OVERLAY ── */
+.call-overlay{
+  position:absolute;inset:44px 0 0;background:linear-gradient(160deg,#1A1208 0%,#0D0C09 50%,#06040A 100%);
+  display:none;flex-direction:column;align-items:center;z-index:50;padding:28px 24px 32px;
+}
+.call-overlay.active{display:flex}
+.call-ov-status{font-size:13px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.call-ov-name{font-family:'Instrument Serif',serif;font-size:36px;color:var(--t1);margin-bottom:6px;text-align:center}
+.call-ov-num{font-size:15px;color:var(--t2);margin-bottom:28px;font-variant-numeric:tabular-nums}
+.call-ov-timer{font-family:'Instrument Serif',serif;font-size:52px;color:var(--amber);font-variant-numeric:tabular-nums;margin-bottom:40px;line-height:1}
+.call-ov-signal{display:flex;gap:6px;margin-bottom:36px;align-items:flex-end}
+.ov-wave{width:4px;border-radius:2px;background:var(--amber);opacity:.8}
+.ov-wave:nth-child(1){height:16px;animation:wave 1.2s ease-in-out infinite;animation-delay:0s}
+.ov-wave:nth-child(2){height:28px;animation:wave 1.2s ease-in-out infinite;animation-delay:.15s}
+.ov-wave:nth-child(3){height:40px;animation:wave 1.2s ease-in-out infinite;animation-delay:.30s}
+.ov-wave:nth-child(4){height:28px;animation:wave 1.2s ease-in-out infinite;animation-delay:.45s}
+.ov-wave:nth-child(5){height:16px;animation:wave 1.2s ease-in-out infinite;animation-delay:.60s}
+@keyframes wave{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.4)}}
+.call-actions{display:grid;grid-template-columns:repeat(3,72px);gap:20px;margin-bottom:32px}
+.ca-btn{
+  width:72px;height:72px;border-radius:36px;border:none;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  transition:transform .12s,opacity .12s;
+}
+.ca-btn:active{transform:scale(.92)}
+.ca-btn span{font-size:10.5px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.06em}
+.ca-btn.mute{background:var(--sf2);font-size:22px}
+.ca-btn.mute.active{background:var(--amberG);border:1.5px solid var(--amber)}
+.ca-btn.speaker{background:var(--sf2);font-size:22px}
+.ca-btn.speaker.active{background:var(--amberG);border:1.5px solid var(--amber)}
+.ca-btn.keypad-toggle{background:var(--sf2);font-size:22px}
+.hangup-btn{
+  width:72px;height:72px;border-radius:36px;border:none;background:var(--red);
+  font-size:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 24px rgba(248,113,113,.4);transition:transform .1s,box-shadow .15s;
+}
+.hangup-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(248,113,113,.5)}
+.hangup-btn:active{transform:scale(.92)}
+
+/* ── INCOMING CALL ── */
+.incoming-overlay{
+  position:absolute;inset:44px 0 0;z-index:60;
+  background:linear-gradient(160deg,#0A1A0A 0%,#0D0C09 60%);
+  display:none;flex-direction:column;align-items:center;padding:40px 24px 36px;
+}
+.incoming-overlay.active{display:flex}
+.in-pulse{width:100px;height:100px;border-radius:50%;background:var(--green);position:relative;display:flex;align-items:center;justify-content:center;font-size:40px;margin-bottom:28px;box-shadow:0 0 0 0 rgba(74,222,128,.4);animation:in-ring 2s ease-out infinite}
+@keyframes in-ring{0%{box-shadow:0 0 0 0 rgba(74,222,128,.4)}70%{box-shadow:0 0 0 30px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
+.in-label{font-size:12.5px;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+.in-name{font-family:'Instrument Serif',serif;font-size:34px;color:var(--t1);text-align:center;margin-bottom:8px}
+.in-num{font-size:15px;color:var(--t2);margin-bottom:48px;font-variant-numeric:tabular-nums}
+.in-actions{display:flex;gap:60px;align-items:center}
+.accept-btn{width:72px;height:72px;border-radius:36px;border:none;background:var(--green);font-size:28px;cursor:pointer;box-shadow:0 4px 24px rgba(74,222,128,.4);transition:transform .1s;display:flex;align-items:center;justify-content:center}
+.accept-btn:active{transform:scale(.92)}
+.reject-btn{width:72px;height:72px;border-radius:36px;border:none;background:var(--red);font-size:28px;cursor:pointer;box-shadow:0 4px 24px rgba(248,113,113,.4);transition:transform .1s;display:flex;align-items:center;justify-content:center}
+.reject-btn:active{transform:scale(.92)}
+.in-actions-label{display:flex;gap:60px;margin-top:8px}
+.ial{font-size:12px;color:var(--t3);font-weight:600;text-align:center;width:72px}
+
+/* TOAST */
+.app-toast{position:absolute;bottom:96px;left:20px;right:20px;z-index:100;background:var(--sf3);border:1px solid var(--bd2);border-radius:12px;padding:12px 16px;font-size:13.5px;color:var(--t1);transform:translateY(20px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+.app-toast.show{transform:translateY(0);opacity:1}
+.app-toast.ok{border-color:var(--green)}
+.app-toast.err{border-color:var(--red)}
+</style>
+
+<div class="phone" id="phone">
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <div class="sb-time" id="sb-time">9:41</div>
+    <div class="sb-icons">
+      <div class="sb-signal"><div class="sig-bar"></div><div class="sig-bar"></div><div class="sig-bar"></div><div class="sig-bar"></div></div>
+      <div class="sb-wifi">▾</div>
+      <div class="sb-batt"></div>
+    </div>
+  </div>
+
+  <!-- APP HEADER -->
+  <div class="app-header">
+    <div class="app-logo">
+      <div class="logo-mark">
+        <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M2 13 L5.5 7 L8.5 10.5 L12 4 L15 9" stroke="#0D0C09" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <div class="app-name">VoIP <span>Infotech</span></div>
+      </div>
+    </div>
+    <div class="sip-status" id="sip-status-bar">
+      <div class="status-dot on" id="status-dot"></div>
+      <span id="status-text">Registered</span>
+    </div>
+  </div>
+
+  <!-- CONTENT AREA -->
+  <div class="content">
+
+    <!-- DIALPAD SCREEN -->
+    <div class="screen dialpad-screen active" id="screen-dial">
+      <div class="number-display">
+        <div id="dial-number" style="color:var(--t3);font-family:'Instrument Serif',serif;font-style:italic;font-size:18px">Enter number to call</div>
+        <button class="dial-delete" id="del-btn" onclick="deleteDigit()" title="Delete">⌫</button>
+      </div>
+      <div class="keypad">
+        <div class="keypad-row">
+          <button class="key" onclick="pressKey('1','')"><span class="key-num">1</span><span class="key-letters"> </span></button>
+          <button class="key" onclick="pressKey('2','ABC')"><span class="key-num">2</span><span class="key-letters">ABC</span></button>
+          <button class="key" onclick="pressKey('3','DEF')"><span class="key-num">3</span><span class="key-letters">DEF</span></button>
+        </div>
+        <div class="keypad-row">
+          <button class="key" onclick="pressKey('4','GHI')"><span class="key-num">4</span><span class="key-letters">GHI</span></button>
+          <button class="key" onclick="pressKey('5','JKL')"><span class="key-num">5</span><span class="key-letters">JKL</span></button>
+          <button class="key" onclick="pressKey('6','MNO')"><span class="key-num">6</span><span class="key-letters">MNO</span></button>
+        </div>
+        <div class="keypad-row">
+          <button class="key" onclick="pressKey('7','PQRS')"><span class="key-num">7</span><span class="key-letters">PQRS</span></button>
+          <button class="key" onclick="pressKey('8','TUV')"><span class="key-num">8</span><span class="key-letters">TUV</span></button>
+          <button class="key" onclick="pressKey('9','WXYZ')"><span class="key-num">9</span><span class="key-letters">WXYZ</span></button>
+        </div>
+        <div class="keypad-row">
+          <button class="key special" onclick="pressKey('*','')"><span class="key-num">✱</span><span class="key-letters"> </span></button>
+          <button class="key" onmousedown="startHold0()" onmouseup="endHold0()" ontouchstart="startHold0()" ontouchend="endHold0()" onclick="pressKey('0','+')"><span class="key-num">0</span><span class="key-letters">+</span></button>
+          <button class="key special" onclick="pressKey('#','')"><span class="key-num">#</span><span class="key-letters"> </span></button>
+        </div>
+      </div>
+      <div class="call-row">
+        <button class="call-side-btn" title="Contacts" onclick="switchTab('contacts')">👥</button>
+        <button class="call-btn" id="call-btn" onclick="startCall()">📞</button>
+        <button class="call-side-btn" title="Recents" onclick="switchTab('recents')">🕐</button>
+      </div>
+    </div>
+
+    <!-- RECENTS SCREEN -->
+    <div class="screen" id="screen-recents">
+      <div class="list-screen">
+        <div class="list-header">Recent Calls</div>
+        <div id="recents-list"></div>
+      </div>
+    </div>
+
+    <!-- CONTACTS SCREEN -->
+    <div class="screen" id="screen-contacts">
+      <div class="contacts-search">
+        <input class="search-input" placeholder="Search contacts…" id="contact-search" oninput="filterContacts(this.value)">
+      </div>
+      <div id="contacts-list" style="padding-bottom:16px"></div>
+    </div>
+
+    <!-- SETTINGS SCREEN -->
+    <div class="screen settings-screen" id="screen-settings">
+      <div class="settings-section">
+        <div class="settings-label">SIP Account</div>
+        <div class="settings-group">
+          <div class="setting-row" style="cursor:pointer" onclick="toggleSipForm()">
+            <div class="setting-icon" style="background:var(--amberG)">⚙️</div>
+            <div class="setting-content">
+              <div class="setting-title">SIP Configuration</div>
+              <div class="setting-value" id="sip-display">sip.voipinfotech.com</div>
+            </div>
+            <div class="setting-arrow" id="sip-arrow">›</div>
+          </div>
+          <div class="sip-form" id="sip-form">
+            <div class="sip-field">
+              <label class="sip-label">SIP Server</label>
+              <input class="sip-input" id="sip-server" value="sip.voipinfotech.com" placeholder="sip.voipinfotech.com">
+            </div>
+            <div class="sip-field">
+              <label class="sip-label">Username</label>
+              <input class="sip-input" id="sip-user" placeholder="your-sip-username">
+            </div>
+            <div class="sip-field">
+              <label class="sip-label">Password</label>
+              <input class="sip-input" id="sip-pass" type="password" placeholder="••••••••">
+            </div>
+            <div class="sip-field">
+              <label class="sip-label">SIP Port</label>
+              <input class="sip-input" id="sip-port" value="5060" placeholder="5060">
+            </div>
+            <button class="sip-save" onclick="saveSip()">Save &amp; Register</button>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon" style="background:rgba(74,222,128,.12)">📶</div>
+            <div class="setting-content">
+              <div class="setting-title">Registration Status</div>
+              <div class="setting-value" id="reg-status" style="color:var(--green)">● Registered — sip.voipinfotech.com</div>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon" style="background:rgba(96,165,250,.12)">🔄</div>
+            <div class="setting-content">
+              <div class="setting-title">Auto Re-register</div>
+              <div class="setting-value">Every 300 seconds</div>
+            </div>
+            <button class="setting-toggle on" id="toggle-reg" onclick="toggleReg(this)"><div class="toggle-thumb"></div></button>
+          </div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-label">Audio</div>
+        <div class="settings-group">
+          <div class="setting-row">
+            <div class="setting-icon" style="background:rgba(167,139,250,.12)">🎵</div>
+            <div class="setting-content">
+              <div class="setting-title">Audio Codec</div>
+              <div class="setting-value">G.711 PCMU (Primary), G.729</div>
+            </div>
+            <div class="setting-arrow">›</div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon" style="background:rgba(245,166,35,.12)">🔇</div>
+            <div class="setting-content">
+              <div class="setting-title">Echo Cancellation</div>
+              <div class="setting-value">WebRTC AEC · Enabled</div>
+            </div>
+            <button class="setting-toggle on" onclick="toggleReg(this)"><div class="toggle-thumb"></div></button>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon" style="background:rgba(74,222,128,.12)">🔊</div>
+            <div class="setting-content">
+              <div class="setting-title">Speaker Volume</div>
+              <div class="setting-value">80%</div>
+            </div>
+            <div class="setting-arrow">›</div>
+          </div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-label">Network</div>
+        <div class="settings-group">
+          <div class="setting-row">
+            <div class="setting-icon" style="background:rgba(96,165,250,.12)">🛡️</div>
+            <div class="setting-content">
+              <div class="setting-title">Transport</div>
+              <div class="setting-value">UDP / TLS (encrypted)</div>
+            </div>
+            <div class="setting-arrow">›</div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon" style="background:rgba(245,166,35,.12)">🌐</div>
+            <div class="setting-content">
+              <div class="setting-title">STUN Server</div>
+              <div class="setting-value">stun.voipinfotech.com:3478</div>
+            </div>
+            <div class="setting-arrow">›</div>
+          </div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <div class="settings-label">About</div>
+        <div class="settings-group">
+          <div class="setting-row">
+            <div class="setting-icon" style="background:var(--amberG)">
+              <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M2 13 L5.5 7 L8.5 10.5 L12 4 L15 9" stroke="#F5A623" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="setting-content">
+              <div class="setting-title">VoIP Infotech Dialer</div>
+              <div class="setting-value">v2.4.1 · Powered by PJSIP 2.14</div>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-icon" style="background:rgba(74,222,128,.12)">📞</div>
+            <div class="setting-content">
+              <div class="setting-title">Support</div>
+              <div class="setting-value">support@voipinfotech.com</div>
+            </div>
+            <div class="setting-arrow">›</div>
+          </div>
+        </div>
+      </div>
+      <div style="height:16px"></div>
+    </div>
+
+    <!-- IN-CALL OVERLAY -->
+    <div class="call-overlay" id="call-overlay">
+      <div class="call-ov-status" id="ov-status">Connecting…</div>
+      <div class="call-ov-name" id="ov-name">+1 202 555 0147</div>
+      <div class="call-ov-num" id="ov-sub">International · United States</div>
+      <div class="call-ov-timer" id="ov-timer" style="display:none">0:00</div>
+      <div class="call-ov-signal" id="ov-signal" style="display:none">
+        <div class="ov-wave"></div><div class="ov-wave"></div><div class="ov-wave"></div>
+        <div class="ov-wave"></div><div class="ov-wave"></div>
+      </div>
+      <div class="call-actions">
+        <button class="ca-btn mute" id="mute-btn" onclick="toggleMute()">🎙️<span>Mute</span></button>
+        <button class="ca-btn speaker" id="spk-btn" onclick="toggleSpeaker()">🔊<span>Speaker</span></button>
+        <button class="ca-btn keypad-toggle" onclick="toggleOverlayKeypad()">⌨️<span>Keypad</span></button>
+      </div>
+      <button class="hangup-btn" onclick="endCall()">📵</button>
+    </div>
+
+    <!-- INCOMING CALL OVERLAY -->
+    <div class="incoming-overlay" id="incoming-overlay">
+      <div class="in-pulse">👤</div>
+      <div class="in-label">Incoming VoIP Call</div>
+      <div class="in-name" id="inc-name">Priya Sharma</div>
+      <div class="in-num" id="inc-num">+91 98765 43210</div>
+      <div class="in-actions">
+        <button class="reject-btn" onclick="rejectCall()">📵</button>
+        <button class="accept-btn" onclick="acceptCall()">📞</button>
+      </div>
+      <div class="in-actions-label">
+        <div class="ial">Decline</div>
+        <div class="ial">Accept</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <div class="tab active" id="tab-dial" onclick="switchTab('dial')">
+      <div class="tab-icon">⌨️</div>
+      <div class="tab-label">Dial</div>
+    </div>
+    <div class="tab" id="tab-recents" onclick="switchTab('recents')">
+      <div class="tab-icon">🕐</div>
+      <div class="tab-label">Recents</div>
+      <div class="tab-badge" id="missed-badge" style="display:none">3</div>
+    </div>
+    <div class="tab" id="tab-contacts" onclick="switchTab('contacts')">
+      <div class="tab-icon">👥</div>
+      <div class="tab-label">Contacts</div>
+    </div>
+    <div class="tab" id="tab-settings" onclick="switchTab('settings')">
+      <div class="tab-icon">⚙️</div>
+      <div class="tab-label">Settings</div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="app-toast" id="app-toast"></div>
+</div>
+
+<script>
+/* Clock */
+function tick(){
+  const d=new Date();
+  let h=d.getHours(),m=d.getMinutes();
+  document.getElementById('sb-time').textContent=(h%12||12)+':'+(m<10?'0'+m:m);
+}
+tick();setInterval(tick,30000);
+
+/* Tabs */
+function switchTab(t){
+  ['dial','recents','contacts','settings'].forEach(s=>{
+    document.getElementById('tab-'+s).classList.toggle('active',s===t);
+    document.getElementById('screen-'+s).classList.toggle('active',s===t);
+  });
+  if(t==='recents')document.getElementById('missed-badge').style.display='none';
+}
+
+/* Dialpad */
+let number='';
+let holdTimer=null;
+
+function pressKey(k,sub){
+  if(number.length>=20)return;
+  number+=k;
+  updateDisplay();
+  addRipple(event);
+}
+function startHold0(){holdTimer=setTimeout(()=>{number+=(number===''?'+':'0');updateDisplay();},500)}
+function endHold0(){clearTimeout(holdTimer)}
+function deleteDigit(){
+  if(number.length>0){number=number.slice(0,-1);updateDisplay();}
+}
+function updateDisplay(){
+  const el=document.getElementById('dial-number');
+  if(number===''){
+    el.textContent='Enter number to call';
+    el.style.color='var(--t3)';
+    el.style.fontFamily="'Instrument Serif',serif";
+    el.style.fontStyle='italic';
+    el.style.fontSize='18px';
+    el.classList.remove('has-value');
+  } else {
+    el.textContent=formatNumber(number);
+    el.style.color='var(--t1)';
+    el.style.fontFamily="'DM Sans',sans-serif";
+    el.style.fontStyle='normal';
+    el.style.fontSize='';
+    el.classList.toggle('has-value',number.length>8);
+  }
+}
+function formatNumber(n){
+  if(n.startsWith('+')&&n.length>7){
+    if(n.startsWith('+1')&&n.length===12)return n.slice(0,2)+' '+n.slice(2,5)+' '+n.slice(5,8)+' '+n.slice(8);
+    if(n.startsWith('+91')&&n.length===13)return n.slice(0,3)+' '+n.slice(3,8)+' '+n.slice(8);
+  }
+  return n;
+}
+function addRipple(e){
+  if(!e||!e.currentTarget)return;
+  const btn=e.currentTarget;
+  const r=document.createElement('span');
+  r.className='ripple';
+  const rect=btn.getBoundingClientRect();
+  const size=Math.max(rect.width,rect.height)*2;
+  r.style.cssText=`width:${size}px;height:${size}px;left:${(rect.width-size)/2}px;top:${(rect.height-size)/2}px`;
+  btn.appendChild(r);
+  setTimeout(()=>r.remove(),400);
+}
+
+/* Call simulation */
+let callTimer=null;
+let callSeconds=0;
+let isMuted=false;
+let isSpeaker=false;
+
+function startCall(){
+  if(!number){showToast('Enter a number to call','err');return;}
+  if(!sipRegistered){showToast('Not registered — check SIP settings','err');return;}
+  document.getElementById('call-overlay').classList.add('active');
+  document.getElementById('ov-name').textContent=formatNumber(number)||'Unknown';
+  document.getElementById('ov-sub').textContent=detectCountry(number);
+  document.getElementById('ov-status').textContent='Connecting…';
+  document.getElementById('ov-timer').style.display='none';
+  document.getElementById('ov-signal').style.display='none';
+  setTimeout(()=>{
+    document.getElementById('ov-status').textContent='● In Call';
+    document.getElementById('ov-status').style.color='var(--green)';
+    document.getElementById('ov-timer').style.display='block';
+    document.getElementById('ov-signal').style.display='flex';
+    callSeconds=0;
+    clearInterval(callTimer);
+    callTimer=setInterval(()=>{
+      callSeconds++;
+      const m=Math.floor(callSeconds/60),s=callSeconds%60;
+      document.getElementById('ov-timer').textContent=m+':'+(s<10?'0'+s:s);
+    },1000);
+  },2000);
+}
+function endCall(){
+  clearInterval(callTimer);
+  document.getElementById('call-overlay').classList.remove('active');
+  document.getElementById('ov-status').style.color='var(--t2)';
+  isMuted=false;isSpeaker=false;
+  document.getElementById('mute-btn').classList.remove('active');
+  document.getElementById('spk-btn').classList.remove('active');
+  const dur=callSeconds>0?Math.floor(callSeconds/60)+'m '+callSeconds%60+'s':'Not answered';
+  showToast('Call ended · '+dur,'ok');
+  addToRecents(formatNumber(number)||number,'out',callSeconds);
+}
+function toggleMute(){
+  isMuted=!isMuted;
+  document.getElementById('mute-btn').classList.toggle('active',isMuted);
+  document.getElementById('mute-btn').querySelector('span').textContent=isMuted?'Unmute':'Mute';
+  showToast(isMuted?'Microphone muted':'Microphone unmuted','ok');
+}
+function toggleSpeaker(){
+  isSpeaker=!isSpeaker;
+  document.getElementById('spk-btn').classList.toggle('active',isSpeaker);
+  showToast(isSpeaker?'Speaker on':'Speaker off','ok');
+}
+function toggleOverlayKeypad(){showToast('Keypad — tap numbers for DTMF tones','ok')}
+function detectCountry(n){
+  if(!n.startsWith('+'))return 'International call';
+  const map={'+1':'United States / Canada','+44':'United Kingdom','+91':'India','+971':'UAE','+65':'Singapore','+61':'Australia','+49':'Germany','+33':'France','+81':'Japan','+966':'Saudi Arabia','+92':'Pakistan','+880':'Bangladesh','+60':'Malaysia','+974':'Qatar','+965':'Kuwait'};
+  for(const [pfx,name] of Object.entries(map)){if(n.startsWith(pfx))return name+' · VoIP call'}
+  return 'International call';
+}
+
+/* Incoming simulation */
+function simulateIncoming(){
+  const contacts=CONTACTS.slice(0,5);
+  const c=contacts[Math.floor(Math.random()*contacts.length)];
+  document.getElementById('inc-name').textContent=c.name;
+  document.getElementById('inc-num').textContent=c.num;
+  document.getElementById('incoming-overlay').classList.add('active');
+}
+function acceptCall(){
+  document.getElementById('incoming-overlay').classList.remove('active');
+  const name=document.getElementById('inc-name').textContent;
+  const num=document.getElementById('inc-num').textContent;
+  document.getElementById('call-overlay').classList.add('active');
+  document.getElementById('ov-name').textContent=name;
+  document.getElementById('ov-sub').textContent=num;
+  document.getElementById('ov-status').textContent='● In Call';
+  document.getElementById('ov-status').style.color='var(--green)';
+  document.getElementById('ov-timer').style.display='block';
+  document.getElementById('ov-signal').style.display='flex';
+  callSeconds=0;
+  clearInterval(callTimer);
+  callTimer=setInterval(()=>{
+    callSeconds++;
+    const m=Math.floor(callSeconds/60),s=callSeconds%60;
+    document.getElementById('ov-timer').textContent=m+':'+(s<10?'0'+s:s);
+  },1000);
+}
+function rejectCall(){
+  document.getElementById('incoming-overlay').classList.remove('active');
+  showToast('Call declined','err');
+  addToRecents(document.getElementById('inc-name').textContent,'mis',0);
+}
+
+/* Recents */
+const RECENTS_DATA=[
+  {name:'Rajesh Gupta',num:'+1 202 555 0147',type:'out',time:'2m ago',dur:'4m 32s',country:'🇺🇸'},
+  {name:'Sunita Kapoor',num:'+971 50 345 6789',type:'in',time:'18m ago',dur:'1m 05s',country:'🇦🇪'},
+  {name:'+44 20 7946 0958',num:'+44 20 7946 0958',type:'mis',time:'1h ago',dur:'Missed',country:'🇬🇧'},
+  {name:'Arjun Mehta',num:'+91 98765 43210',type:'out',time:'2h ago',dur:'8m 11s',country:'🇮🇳'},
+  {name:'+65 6123 4567',num:'+65 6123 4567',type:'mis',time:'3h ago',dur:'Missed',country:'🇸🇬'},
+  {name:'Priya Sharma',num:'+91 87654 32109',type:'in',time:'Yesterday',dur:'2m 50s',country:'🇮🇳'},
+  {name:'+49 30 1234 5678',num:'+49 30 1234 5678',type:'mis',time:'Yesterday',dur:'Missed',country:'🇩🇪'},
+  {name:'Vikram Nair',num:'+61 2 9876 5432',type:'out',time:'2 days ago',dur:'11m 03s',country:'🇦🇺'},
+];
+let recents=[...RECENTS_DATA];
+function addToRecents(num,type,secs){
+  const dur=secs>0?Math.floor(secs/60)+'m '+secs%60+'s':'Not answered';
+  recents.unshift({name:num,num:num,type,time:'Just now',dur,country:'📞'});
+  if(recents.length>20)recents.pop();
+  renderRecents();
+}
+function renderRecents(){
+  const el=document.getElementById('recents-list');
+  el.innerHTML=recents.map(r=>`
+    <div class="call-item" onclick="dialFromRecent('${r.num.replace(/'/g,"\\'")}')">
+      <div class="call-avatar" style="background:${avatarColor(r.name)}"><span>${r.country||r.name[0]}</span></div>
+      <div class="call-info">
+        <div class="call-name${r.type==='mis'?' missed':''}">${r.name}</div>
+        <div class="call-meta">
+          <span class="call-type-icon ${r.type}">${r.type==='out'?'↗':r.type==='in'?'↙':'↘'}</span>
+          <span>${r.type==='out'?'Outgoing':r.type==='in'?'Incoming':'Missed'}</span>
+          <span>·</span><span>${r.dur}</span>
+        </div>
+      </div>
+      <div class="call-time">${r.time}</div>
+      <button class="recall-btn" onclick="event.stopPropagation();dialAndCall('${r.num.replace(/'/g,"\\'")}')">📞</button>
+    </div>`).join('');
+  document.getElementById('missed-badge').style.display=recents.filter(r=>r.type==='mis').length?'':'none';
+}
+function dialFromRecent(num){number=num.replace(/\s/g,'');updateDisplay();switchTab('dial')}
+function dialAndCall(num){number=num.replace(/\s/g,'');updateDisplay();switchTab('dial');setTimeout(startCall,100)}
+renderRecents();
+
+/* Contacts */
+const COLORS=['#F5A623','#4ADE80','#60A5FA','#F87171','#A78BFA','#FB923C','#34D399','#F472B6'];
+function avatarColor(name){return COLORS[name.charCodeAt(0)%COLORS.length]}
+const CONTACTS=[
+  {name:'Anjali Verma',num:'+91 98100 12345',initial:'A',country:'🇮🇳'},
+  {name:'Arjun Mehta',num:'+91 98765 43210',initial:'A',country:'🇮🇳'},
+  {name:'Deepak Patel',num:'+1 408 555 0192',initial:'D',country:'🇺🇸'},
+  {name:'Farrukh Khan',num:'+44 7911 123456',initial:'F',country:'🇬🇧'},
+  {name:'Kavita Reddy',num:'+91 97408 56789',initial:'K',country:'🇮🇳'},
+  {name:'Mohammed Al-Rashid',num:'+971 55 234 5678',initial:'M',country:'🇦🇪'},
+  {name:'Nisha Agarwal',num:'+65 9123 4567',initial:'N',country:'🇸🇬'},
+  {name:'Priya Sharma',num:'+91 87654 32109',initial:'P',country:'🇮🇳'},
+  {name:'Rajesh Gupta',num:'+1 202 555 0147',initial:'R',country:'🇺🇸'},
+  {name:'Ravi Krishnamurthy',num:'+61 412 345 678',initial:'R',country:'🇦🇺'},
+  {name:'Sahil Qureshi',num:'+92 300 123 4567',initial:'S',country:'🇵🇰'},
+  {name:'Sunita Kapoor',num:'+971 50 345 6789',initial:'S',country:'🇦🇪'},
+  {name:'Vikram Nair',num:'+61 2 9876 5432',initial:'V',country:'🇦🇺'},
+  {name:'Yusuf Al-Sayed',num:'+966 50 987 6543',initial:'Y',country:'🇸🇦'},
+  {name:'Zara Ahmed',num:'+44 20 1234 5678',initial:'Z',country:'🇬🇧'},
+];
+function renderContacts(list){
+  const el=document.getElementById('contacts-list');
+  if(!list.length){el.innerHTML='<div style="text-align:center;padding:40px;color:var(--t3);font-size:14px">No contacts found</div>';return;}
+  const groups={};
+  list.forEach(c=>{const k=c.name[0].toUpperCase();if(!groups[k])groups[k]=[];groups[k].push(c);});
+  el.innerHTML=Object.keys(groups).sort().map(k=>`
+    <div class="contact-group-label">${k}</div>
+    ${groups[k].map(c=>`
+      <div class="contact-item">
+        <div class="contact-av" style="background:${avatarColor(c.name)}">${c.country}</div>
+        <div class="contact-info"><div class="contact-name">${c.name}</div><div class="contact-num">${c.num}</div></div>
+        <button class="contact-call-btn" onclick="dialAndCall('${c.num.replace(/'/g,"\\'")}')">📞</button>
+      </div>`).join('')}
+  `).join('');
+}
+function filterContacts(q){
+  if(!q)return renderContacts(CONTACTS);
+  renderContacts(CONTACTS.filter(c=>c.name.toLowerCase().includes(q.toLowerCase())||c.num.includes(q)));
+}
+renderContacts(CONTACTS);
+
+/* Settings */
+let sipRegistered=true;
+function toggleSipForm(){
+  const f=document.getElementById('sip-form');
+  const open=f.classList.toggle('open');
+  document.getElementById('sip-arrow').textContent=open?'⌄':'›';
+}
+function saveSip(){
+  const srv=document.getElementById('sip-server').value.trim();
+  const usr=document.getElementById('sip-user').value.trim();
+  const pwd=document.getElementById('sip-pass').value;
+  if(!srv||!usr||!pwd){showToast('Fill in SIP server, username, and password','err');return;}
+  document.getElementById('sip-display').textContent=srv;
+  document.getElementById('sip-form').classList.remove('open');
+  document.getElementById('sip-arrow').textContent='›';
+  document.getElementById('reg-status').textContent='⟳ Registering…';
+  document.getElementById('reg-status').style.color='var(--t2)';
+  document.getElementById('status-dot').className='status-dot off';
+  document.getElementById('status-text').textContent='Registering…';
+  setTimeout(()=>{
+    sipRegistered=true;
+    document.getElementById('reg-status').textContent='● Registered — '+srv;
+    document.getElementById('reg-status').style.color='var(--green)';
+    document.getElementById('status-dot').className='status-dot on';
+    document.getElementById('status-text').textContent='Registered';
+    showToast('Registered to '+srv,'ok');
+  },2000);
+}
+function toggleReg(btn){
+  btn.classList.toggle('on');btn.classList.toggle('off');
+}
+
+/* Toast */
+let toastTimer=null;
+function showToast(msg,type){
+  const t=document.getElementById('app-toast');
+  t.textContent=msg;t.className='app-toast show '+(type||'ok');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+/* Simulate incoming call after 8s */
+setTimeout(simulateIncoming,8000);
+
+/* Show missed badge */
+document.getElementById('missed-badge').style.display='flex';
+</script>

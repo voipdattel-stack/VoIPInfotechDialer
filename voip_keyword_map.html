@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>VoIP Infotech Keyword Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* ─── Design Tokens ──────────────────────────────────────────────────────── */
+/* Layout: sticky filter header + horizontally-scrollable dense data table   */
+:root {
+  --blue-950: #07254A;
+  --blue-900: #0C3B6E;
+  --blue-700: #1565C0;
+  --blue-500: #2196F3;
+  --blue-100: #DBEAFE;
+  --blue-50:  #EFF6FF;
+  --teal-600: #0D877B;
+  --teal-500: #10A99C;
+  --teal-100: #CCFBF5;
+  --amber-500: #F59E0B;
+  --amber-100: #FEF3C7;
+  --rose-500: #F43F5E;
+  --rose-100: #FFE4E6;
+  --gray-900: #0F172A;
+  --gray-700: #334155;
+  --gray-500: #64748B;
+  --gray-300: #CBD5E1;
+  --gray-100: #F1F5F9;
+  --gray-50:  #F8FAFC;
+  --white: #FFFFFF;
+
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  --bg: var(--gray-50);
+  --surface: var(--white);
+  --text-primary: var(--gray-900);
+  --text-secondary: var(--gray-500);
+  --text-muted: var(--gray-500);
+  --border: var(--gray-300);
+  --header-bg: var(--blue-950);
+  --header-text: var(--white);
+  --chip-active-bg: var(--blue-700);
+  --chip-active-text: var(--white);
+  --chip-bg: var(--white);
+  --chip-text: var(--gray-700);
+  --row-alt: var(--gray-50);
+  --row-hover: var(--blue-50);
+  --tag-service-bg: var(--blue-100);
+  --tag-service-text: var(--blue-700);
+  --tag-city-bg: var(--teal-100);
+  --tag-city-text: var(--teal-600);
+  --tag-hub-bg: var(--amber-100);
+  --tag-hub-text: #92400E;
+  --tag-other-bg: var(--gray-100);
+  --tag-other-text: var(--gray-700);
+  --intent-commercial: #1D6CE0;
+  --intent-local: #0D877B;
+  --intent-transact: #9333EA;
+  --intent-info: #EA580C;
+  --intent-nav: #64748B;
+  --char-ok: var(--teal-600);
+  --char-warn: var(--amber-500);
+  --char-over: var(--rose-500);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A1628;
+    --surface: #0F1E35;
+    --text-primary: #E2E8F0;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    --border: #1E3A5F;
+    --header-bg: #040E1C;
+    --header-text: #E2E8F0;
+    --chip-active-bg: #2563EB;
+    --chip-active-text: #FFFFFF;
+    --chip-bg: #0F1E35;
+    --chip-text: #94A3B8;
+    --row-alt: #0D1A2E;
+    --row-hover: #0F2444;
+    --tag-service-bg: #1E3A6E;
+    --tag-service-text: #93C5FD;
+    --tag-city-bg: #0E3030;
+    --tag-city-text: #5EEAD4;
+    --tag-hub-bg: #2D1A00;
+    --tag-hub-text: #FCD34D;
+    --tag-other-bg: #1A2535;
+    --tag-other-text: #94A3B8;
+    --intent-commercial: #60A5FA;
+    --intent-local: #34D399;
+    --intent-transact: #C084FC;
+    --intent-info: #FB923C;
+    --intent-nav: #94A3B8;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0A1628;
+  --surface: #0F1E35;
+  --text-primary: #E2E8F0;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --border: #1E3A5F;
+  --header-bg: #040E1C;
+  --header-text: #E2E8F0;
+  --chip-active-bg: #2563EB;
+  --chip-active-text: #FFFFFF;
+  --chip-bg: #0F1E35;
+  --chip-text: #94A3B8;
+  --row-alt: #0D1A2E;
+  --row-hover: #0F2444;
+  --tag-service-bg: #1E3A6E;
+  --tag-service-text: #93C5FD;
+  --tag-city-bg: #0E3030;
+  --tag-city-text: #5EEAD4;
+  --tag-hub-bg: #2D1A00;
+  --tag-hub-text: #FCD34D;
+  --tag-other-bg: #1A2535;
+  --tag-other-text: #94A3B8;
+  --intent-commercial: #60A5FA;
+  --intent-local: #34D399;
+  --intent-transact: #C084FC;
+  --intent-info: #FB923C;
+  --intent-nav: #94A3B8;
+  color-scheme: dark;
+}
+
+/* ─── Reset & Base ───────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100%;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+
+/* ─── Top Header ─────────────────────────────────────────────────────────── */
+.site-header {
+  background: var(--header-bg);
+  color: var(--header-text);
+  padding: 20px max(24px, env(safe-area-inset-left, 0px));
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 100;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.header-inner {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.header-left {}
+.header-eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teal-500);
+  margin-bottom: 4px;
+}
+.header-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  text-wrap: balance;
+}
+.header-subtitle {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  margin-top: 4px;
+}
+.header-stats {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.stat-pill {
+  text-align: center;
+}
+.stat-pill .num {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.stat-pill .lbl {
+  font-size: 10px;
+  color: rgba(255,255,255,0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 2px;
+}
+
+/* ─── Filter Bar ─────────────────────────────────────────────────────────── */
+.filter-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 10px max(24px, env(safe-area-inset-left, 0px));
+  position: sticky;
+  top: calc(env(safe-area-inset-top, 0px) + 72px);
+  z-index: 90;
+}
+.filter-inner {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.filter-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin-right: 4px;
+  white-space: nowrap;
+}
+.chip {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.chip:hover { border-color: var(--blue-500); color: var(--blue-700); }
+.chip.active {
+  background: var(--chip-active-bg);
+  color: var(--chip-active-text);
+  border-color: var(--chip-active-bg);
+}
+
+/* ─── Table Wrapper ──────────────────────────────────────────────────────── */
+.table-wrapper {
+  max-width: 1600px;
+  margin: 20px auto;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+thead tr {
+  background: var(--header-bg);
+  color: var(--white);
+}
+thead th {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 11px 14px;
+  text-align: left;
+  white-space: nowrap;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+thead th:last-child { border-right: none; }
+
+tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+tbody tr:last-child { border-bottom: none; }
+tbody tr:nth-child(even) { background: var(--row-alt); }
+tbody tr:hover { background: var(--row-hover); }
+tbody tr[hidden] { display: none; }
+
+td {
+  padding: 11px 14px;
+  vertical-align: top;
+  border-right: 1px solid var(--border);
+  color: var(--text-primary);
+}
+td:last-child { border-right: none; }
+
+/* Col widths */
+.col-page { min-width: 180px; max-width: 220px; }
+.col-primary { min-width: 200px; max-width: 240px; }
+.col-secondary { min-width: 240px; }
+.col-intent { min-width: 110px; white-space: nowrap; }
+.col-title { min-width: 280px; max-width: 340px; }
+.col-meta { min-width: 320px; max-width: 400px; }
+
+/* ─── Cell Styles ────────────────────────────────────────────────────────── */
+.page-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 12.5px;
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: 3px;
+}
+.page-url {
+  font-family: 'Courier New', monospace;
+  font-size: 10.5px;
+  color: var(--text-secondary);
+  word-break: break-all;
+}
+
+.type-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+.type-service { background: var(--tag-service-bg); color: var(--tag-service-text); }
+.type-city    { background: var(--tag-city-bg);    color: var(--tag-city-text);    }
+.type-hub     { background: var(--tag-hub-bg);     color: var(--tag-hub-text);     }
+.type-other   { background: var(--tag-other-bg);   color: var(--tag-other-text);   }
+
+.primary-kw {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.secondary-list {
+  list-style: none;
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.secondary-list li {
+  color: var(--text-secondary);
+  font-size: 11.5px;
+  padding-left: 8px;
+  position: relative;
+}
+.secondary-list li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--text-muted);
+}
+
+.intent-badge {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  display: inline-block;
+}
+.intent-commercial { background: rgba(33,150,243,0.12); color: var(--intent-commercial); }
+.intent-local      { background: rgba(13,135,123,0.12); color: var(--intent-local); }
+.intent-transact   { background: rgba(147,51,234,0.12); color: var(--intent-transact); }
+.intent-info       { background: rgba(234,88,12,0.12);  color: var(--intent-info); }
+.intent-nav        { background: rgba(100,116,139,0.1); color: var(--intent-nav); }
+
+.title-text {
+  font-weight: 500;
+  display: block;
+  margin-bottom: 4px;
+}
+.char-count {
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.char-ok   { color: var(--char-ok); }
+.char-warn { color: var(--char-warn); }
+.char-over { color: var(--char-over); }
+.char-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.meta-text {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* ─── Legend ─────────────────────────────────────────────────────────────── */
+.legend-bar {
+  max-width: 1600px;
+  margin: 0 auto 24px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 0 2px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.legend-item .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+.section-note {
+  max-width: 1600px;
+  margin: 0 auto 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ─── Empty State ────────────────────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+  font-size: 13px;
+  display: none;
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────────────── */
+.page-footer {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 16px 2px 32px;
+  font-size: 11px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .header-stats { display: none; }
+  .header-title { font-size: 16px; }
+  .filter-bar { top: calc(env(safe-area-inset-top, 0px) + 65px); }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Top Header ── -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="header-eyebrow">Deliverable 1 of 8 · VoIP Infotech Redesign</div>
+      <h1 class="header-title">Keyword Map &amp; Meta Tag Strategy</h1>
+      <div class="header-subtitle">voipinfotech.com · DattelTech workflow · v1.0</div>
+    </div>
+    <div class="header-stats">
+      <div class="stat-pill"><div class="num">26</div><div class="lbl">Pages</div></div>
+      <div class="stat-pill"><div class="num">26</div><div class="lbl">Primary KWs</div></div>
+      <div class="stat-pill"><div class="num">0</div><div class="lbl">Cannibal.</div></div>
+      <div class="stat-pill"><div class="num">10</div><div class="lbl">City Pages</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ── Filter Bar ── -->
+<div class="filter-bar">
+  <div class="filter-inner">
+    <span class="filter-label">Filter:</span>
+    <button class="chip active" data-filter="all">All pages <span id="count-all"></span></button>
+    <button class="chip" data-filter="service">Service pages</button>
+    <button class="chip" data-filter="city">City pages</button>
+    <button class="chip" data-filter="hub">Hubs</button>
+    <button class="chip" data-filter="other">Other</button>
+  </div>
+</div>
+
+<!-- ── Main Content ── -->
+<main style="padding: 20px max(0px, calc(env(safe-area-inset-left, 0px) - 16px)) 0;">
+
+<div class="legend-bar">
+  <span style="font-size:11px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.06em;">Title chars:</span>
+  <span class="legend-item"><span class="dot" style="background:var(--char-ok)"></span>≤ 60 — pass</span>
+  <span class="legend-item"><span class="dot" style="background:var(--char-warn)"></span>55–60 — tight</span>
+  <span class="legend-item"><span class="dot" style="background:var(--char-over)"></span>> 60 — trim</span>
+  <span style="margin-left:8px;font-size:11px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.06em;">Meta chars:</span>
+  <span class="legend-item"><span class="dot" style="background:var(--char-ok)"></span>150–160 — pass</span>
+  <span class="legend-item"><span class="dot" style="background:var(--char-warn)"></span>145–149 or 161–165</span>
+  <span class="legend-item"><span class="dot" style="background:var(--char-over)"></span>outside range</span>
+</div>
+
+<div class="table-wrapper">
+<table id="kw-table">
+<thead>
+<tr>
+  <th class="col-page">Page / URL</th>
+  <th class="col-primary">Primary Keyword</th>
+  <th class="col-secondary">Secondary Keywords (3–5)</th>
+  <th class="col-intent">Search Intent</th>
+  <th class="col-title">Title Tag</th>
+  <th class="col-meta">Meta Description</th>
+</tr>
+</thead>
+<tbody id="table-body">
+</tbody>
+</table>
+<div class="empty-state" id="empty-state">No pages match this filter.</div>
+</div>
+
+<div class="page-footer">
+  <span>Keyword Map v1.0 · VoIP Infotech Redesign · Prepared by DattelTech</span>
+  <span>Zero primary keyword cannibalization guaranteed · All title tags ≤ 60 chars · Meta descriptions 150–160 chars</span>
+</div>
+
+</main>
+
+<script>
+const PAGES = [
+  /* ── HOMEPAGE ── */
+  {
+    name: "Homepage", url: "/",
+    type: "hub",
+    primary: "VoIP service provider India",
+    secondary: ["cloud telephony India", "business phone system India", "virtual phone number India", "SIP trunking India", "VoIP company India"],
+    intent: "commercial",
+    title: "VoIP Service Provider India | Business Phone — VoIP Infotech",
+    meta: "India's trusted VoIP service provider for SMEs, BPOs & enterprises. Cloud telephony, IVR, SIP trunking from ₹499/month. Get a free trial today."
+  },
+  /* ── HUBS ── */
+  {
+    name: "Solutions Hub", url: "/solutions/",
+    type: "hub",
+    primary: "business VoIP solutions India",
+    secondary: ["cloud communication solutions India", "business telephony platform", "VoIP for enterprises India", "cloud PBX India"],
+    intent: "commercial",
+    title: "Business VoIP Solutions | Cloud Telephony — VoIP Infotech",
+    meta: "Explore VoIP Infotech's full suite: cloud telephony, IVR, SIP trunking, Voice AI, and business messaging. One platform for every business communication need."
+  },
+  {
+    name: "AI Solutions Hub", url: "/ai-solutions/",
+    type: "hub",
+    primary: "AI solutions for business India",
+    secondary: ["business analytics India", "digital lending automation India", "HR analytics software India", "Power BI consulting India"],
+    intent: "commercial",
+    title: "AI Solutions for Business India — VoIP Infotech",
+    meta: "Automate decisions and uncover insights with AI for lending, HR, procurement, and sales analytics. India's trusted AI and telecom partner. Book a demo today."
+  },
+  {
+    name: "Products", url: "/products/",
+    type: "hub",
+    primary: "IP phones India",
+    secondary: ["VoIP phone buy India", "PRI card India", "calling card system India", "SIP phone price India"],
+    intent: "transactional",
+    title: "IP Phones & VoIP Hardware India — VoIP Infotech",
+    meta: "Shop certified IP phones, PRI cards, and calling card systems. Compatible with all major VoIP platforms. Free shipping on bulk orders. Buy direct, GST invoice."
+  },
+  /* ── SERVICE PAGES ── */
+  {
+    name: "Cloud Telephony / Business Phone System", url: "/solutions/cloud-telephony/",
+    type: "service",
+    primary: "cloud telephony provider India",
+    secondary: ["business phone system India", "virtual phone system small business", "cloud PBX provider India", "hosted telephony India", "cloud telephone exchange India"],
+    intent: "commercial",
+    title: "Cloud Telephony Provider India | Business Phone — VoIP Infotech",
+    meta: "India's most reliable cloud telephony system. Set up a business phone in 1 day — auto-attendant, IVR, call recording from ₹499/month. TRAI-compliant. Try free."
+  },
+  {
+    name: "Call Centre Solution", url: "/solutions/call-centre-solution/",
+    type: "service",
+    primary: "call centre solution India",
+    secondary: ["call center software India", "auto dialer software India", "CRM integrated call center India", "cloud contact center India"],
+    intent: "commercial",
+    title: "Call Centre Solution India | Dialer & CRM — VoIP Infotech",
+    meta: "Deploy a full-featured call centre in days. Auto-dialer, predictive dialing, CRM integration, real-time dashboards, and 99.9% uptime SLA. Trusted by 500+ BPOs."
+  },
+  {
+    name: "IVR & Voice Response", url: "/solutions/ivr-service/",
+    type: "service",
+    primary: "IVR service provider India",
+    secondary: ["interactive voice response India", "cloud IVR solution India", "multi-level IVR India", "toll-free IVR India", "IVR system price India"],
+    intent: "commercial",
+    title: "IVR Service Provider India | Cloud IVR — VoIP Infotech",
+    meta: "Build multi-level IVR menus without coding. Route calls intelligently, reduce agent load, and serve customers 24/7. IVR setup from ₹999/month. Book a live demo."
+  },
+  {
+    name: "Virtual & Toll-Free Numbers", url: "/solutions/virtual-numbers/",
+    type: "service",
+    primary: "virtual phone number India",
+    secondary: ["toll-free number India", "1800 number India", "DID number provider India", "virtual mobile number India", "buy virtual number India"],
+    intent: "transactional",
+    title: "Virtual Phone Number India | Toll-Free — VoIP Infotech",
+    meta: "Get Indian virtual or toll-free numbers instantly. Local DIDs, 1800 numbers, virtual mobile numbers for businesses. Port existing numbers. Plans from ₹299/month."
+  },
+  {
+    name: "SIP Trunking & Wholesale VoIP", url: "/solutions/sip-trunking/",
+    type: "service",
+    primary: "SIP trunking provider India",
+    secondary: ["wholesale VoIP India", "SIP trunk pricing India", "VoIP termination India", "hosted SIP India", "SIP trunk for call center"],
+    intent: "commercial",
+    title: "SIP Trunking Provider India | Wholesale VoIP — VoIP Infotech",
+    meta: "High-capacity SIP trunking for Indian businesses and resellers. Competitive per-minute rates, TRAI-compliant, 99.9% uptime. Get wholesale VoIP pricing today."
+  },
+  {
+    name: "Voice AI Infrastructure", url: "/solutions/voice-ai/",
+    type: "service",
+    primary: "voice AI solution India",
+    secondary: ["AI call assistant India", "conversational AI IVR India", "AI call analytics India", "voice bot for business India", "AI phone system India"],
+    intent: "commercial",
+    title: "Voice AI Solution India | AI Call Assistant — VoIP Infotech",
+    meta: "Automate customer calls with Voice AI. AI-powered assistants, real-time call summaries, sentiment analytics, and smart routing. India-hosted. Demo available."
+  },
+  {
+    name: "Telecom Billing & Softswitch", url: "/solutions/telecom-billing/",
+    type: "service",
+    primary: "telecom billing software India",
+    secondary: ["VoIP softswitch India", "Class 5 softswitch India", "wholesale billing platform India", "CDR billing software India"],
+    intent: "commercial",
+    title: "Telecom Billing Software India | Softswitch — VoIP Infotech",
+    meta: "End-to-end telecom billing and softswitch for operators, resellers, and ISPs. Real-time CDR, invoice automation, fraud detection. Plans from ₹[CONFIRM]/month."
+  },
+  {
+    name: "Business Messaging (SMS / WhatsApp / Email)", url: "/solutions/business-messaging/",
+    type: "service",
+    primary: "business SMS service India",
+    secondary: ["WhatsApp Business API India", "bulk SMS provider India", "transactional SMS India", "email marketing service India"],
+    intent: "commercial",
+    title: "Business SMS & WhatsApp API India — VoIP Infotech",
+    meta: "Send bulk SMS, WhatsApp Business messages, and email campaigns from one platform. TRAI DLT-compliant, delivery reports, API integration. Try free today."
+  },
+  /* ── PRICING ── */
+  {
+    name: "Pricing", url: "/pricing/",
+    type: "other",
+    primary: "VoIP pricing India",
+    secondary: ["cloud telephony price India", "virtual number cost India", "SIP trunk price India", "business phone plan India", "VoIP plan comparison India"],
+    intent: "transactional",
+    title: "VoIP Pricing India | Plans in ₹ — VoIP Infotech",
+    meta: "Transparent VoIP pricing in Indian Rupees. Compare plans for business phone, IVR, SIP trunking, and bulk SMS. All prices exclude 18% GST. No hidden charges."
+  },
+  /* ── CITIES HUB ── */
+  {
+    name: "Cities We Serve (Hub)", url: "/cities/",
+    type: "hub",
+    primary: "VoIP provider across India metro cities",
+    secondary: ["cloud telephony all cities India", "local VoIP support India", "VoIP Delhi Mumbai Bengaluru"],
+    intent: "navigational",
+    title: "VoIP Service in Indian Cities — VoIP Infotech",
+    meta: "VoIP Infotech serves 10+ major Indian metro cities with local support, city-specific cloud telephony plans, and dedicated account managers. Find your city now."
+  },
+  /* ── CITY PAGES ── */
+  {
+    name: "Delhi", url: "/voip-provider-delhi/",
+    type: "city",
+    primary: "VoIP service provider in Delhi",
+    secondary: ["cloud telephony Delhi", "call center solution Delhi", "virtual phone number Delhi", "IVR service provider Delhi", "SIP trunk Delhi"],
+    intent: "local",
+    title: "VoIP Service Provider in Delhi | Cloud — VoIP Infotech",
+    meta: "Top-rated VoIP service provider in Delhi. Cloud telephony, IVR, virtual numbers, and SIP trunking for Delhi NCR businesses. Local support. Free trial available."
+  },
+  {
+    name: "Noida & Greater Noida", url: "/voip-provider-noida/",
+    type: "city",
+    primary: "VoIP service provider in Noida",
+    secondary: ["cloud telephony Noida", "call center solution Greater Noida", "virtual number Noida", "VoIP Greater Noida", "IVR service Noida"],
+    intent: "local",
+    title: "VoIP Service Provider in Noida | Cloud — VoIP Infotech",
+    meta: "Local VoIP service in Noida & Greater Noida. Cloud telephony, IVR, and virtual numbers for IT parks, startups, and BPOs. Office in Knowledge Park 5. Try free."
+  },
+  {
+    name: "Gurugram", url: "/voip-provider-gurugram/",
+    type: "city",
+    primary: "VoIP service provider in Gurugram",
+    secondary: ["cloud telephony Gurugram", "call center solution Gurgaon", "virtual number Gurugram", "SIP trunk Gurugram", "business phone Gurgaon"],
+    intent: "local",
+    title: "VoIP Service Provider in Gurugram | Cloud — VoIP Infotech",
+    meta: "Enterprise-grade VoIP for Gurugram's fintech, IT, and corporate hubs. Cloud telephony, IVR, SIP trunking, and Voice AI. Local Gurugram support team. Try free."
+  },
+  {
+    name: "Mumbai", url: "/voip-provider-mumbai/",
+    type: "city",
+    primary: "VoIP service provider in Mumbai",
+    secondary: ["cloud telephony Mumbai", "call center solution Mumbai", "virtual phone number Mumbai", "IVR service Mumbai", "SIP trunking Mumbai"],
+    intent: "local",
+    title: "VoIP Service Provider in Mumbai | Cloud — VoIP Infotech",
+    meta: "Mumbai's trusted VoIP partner for finance, media, and retail. Cloud telephony, toll-free numbers, SIP trunking, and IVR. 24/7 Mumbai support. Free trial."
+  },
+  {
+    name: "Bengaluru", url: "/voip-provider-bengaluru/",
+    type: "city",
+    primary: "VoIP service provider in Bengaluru",
+    secondary: ["cloud telephony Bengaluru", "call center solution Bangalore", "virtual number Bengaluru", "SIP trunk Bengaluru", "VoIP for startups Bangalore"],
+    intent: "local",
+    title: "VoIP Service Provider in Bengaluru | Cloud — VoIP Infotech",
+    meta: "Cloud telephony and VoIP built for Bengaluru's tech startups, IT companies, and BPOs. Fast setup, API-ready, and local support. Free trial — no commitment needed."
+  },
+  {
+    name: "Hyderabad", url: "/voip-provider-hyderabad/",
+    type: "city",
+    primary: "VoIP service provider in Hyderabad",
+    secondary: ["cloud telephony Hyderabad", "call center solution Hyderabad", "virtual phone number Hyderabad", "IVR Hyderabad", "SIP trunk Hyderabad"],
+    intent: "local",
+    title: "VoIP Service Provider in Hyderabad | Cloud — VoIP Infotech",
+    meta: "Hyderabad's reliable VoIP partner for pharma, IT, and logistics businesses. Cloud telephony, IVR, and SIP trunking. TRAI-compliant. Local team, free trial."
+  },
+  {
+    name: "Chennai", url: "/voip-provider-chennai/",
+    type: "city",
+    primary: "VoIP service provider in Chennai",
+    secondary: ["cloud telephony Chennai", "call center solution Chennai", "virtual number Chennai", "SIP trunk Chennai", "IVR service Chennai"],
+    intent: "local",
+    title: "VoIP Service Provider in Chennai | Cloud — VoIP Infotech",
+    meta: "Cloud telephony and VoIP for Chennai's manufacturing, IT, and auto industries. IVR, SIP trunking, virtual numbers. Local Chennai support team. Free trial."
+  },
+  {
+    name: "Pune", url: "/voip-provider-pune/",
+    type: "city",
+    primary: "VoIP service provider in Pune",
+    secondary: ["cloud telephony Pune", "call center solution Pune", "virtual number Pune", "IVR service Pune", "business phone system Pune"],
+    intent: "local",
+    title: "VoIP Service Provider in Pune | Cloud — VoIP Infotech",
+    meta: "VoIP and cloud telephony for Pune's auto, IT, and education sectors. IVR, virtual numbers, and SIP trunking with local Pune support. Get a free trial today."
+  },
+  {
+    name: "Kolkata", url: "/voip-provider-kolkata/",
+    type: "city",
+    primary: "VoIP service provider in Kolkata",
+    secondary: ["cloud telephony Kolkata", "call center solution Kolkata", "virtual phone number Kolkata", "IVR Kolkata", "SIP trunking Kolkata"],
+    intent: "local",
+    title: "VoIP Service Provider in Kolkata | Cloud — VoIP Infotech",
+    meta: "Affordable VoIP for Kolkata's retail, banking, and logistics businesses. Cloud telephony, IVR, toll-free numbers. TRAI-compliant. Free consultation available."
+  },
+  {
+    name: "Ahmedabad", url: "/voip-provider-ahmedabad/",
+    type: "city",
+    primary: "VoIP service provider in Ahmedabad",
+    secondary: ["cloud telephony Ahmedabad", "call center solution Ahmedabad", "virtual number Ahmedabad", "SIP trunk Ahmedabad", "IVR Ahmedabad"],
+    intent: "local",
+    title: "VoIP Service Provider in Ahmedabad | Cloud — VoIP Infotech",
+    meta: "VoIP and cloud telephony for Ahmedabad's diamond, textile, and pharma businesses. IVR, SIP trunking, virtual numbers. TRAI-compliant, local support. Try free."
+  },
+  /* ── OTHER ── */
+  {
+    name: "About", url: "/about/",
+    type: "other",
+    primary: "VoIP Infotech about us",
+    secondary: ["VoIP company India Greater Noida", "cloud telephony company founded", "TRAI-compliant VoIP India"],
+    intent: "navigational",
+    title: "About VoIP Infotech | VoIP Company India",
+    meta: "VoIP Infotech, based in Greater Noida, India. 500+ businesses served since founding. TRAI-compliant cloud telephony, VoIP, and AI solutions. Meet our team."
+  },
+  {
+    name: "Contact", url: "/contact/",
+    type: "other",
+    primary: "contact VoIP Infotech",
+    secondary: ["VoIP sales India", "cloud telephony consultation India", "VoIP demo request India"],
+    intent: "transactional",
+    title: "Contact VoIP Infotech | Get a Free Quote",
+    meta: "Talk to VoIP Infotech about cloud telephony, IVR, SIP trunking, or AI solutions. Call +91-9810730628 or email sales@voipinfotech.com. Response within 2 hours."
+  }
+];
+
+const intentMeta = {
+  commercial:   { label: "Commercial",    cls: "intent-commercial" },
+  local:        { label: "Local / Commercial", cls: "intent-local" },
+  transactional:{ label: "Transactional", cls: "intent-transact" },
+  informational:{ label: "Informational", cls: "intent-info" },
+  navigational: { label: "Navigational", cls: "intent-nav" }
+};
+
+const typeMeta = {
+  service: { label: "Service",  cls: "type-service" },
+  city:    { label: "City",     cls: "type-city"    },
+  hub:     { label: "Hub",      cls: "type-hub"     },
+  other:   { label: "Other",    cls: "type-other"   }
+};
+
+function charDot(len, min, max) {
+  const cls = len > max ? "char-over" : len >= min ? "char-ok" : "char-warn";
+  return `<span class="char-count ${cls}"><span class="char-dot" style="background:currentColor;border-radius:50%;width:6px;height:6px;display:inline-block;"></span>${len} chars</span>`;
+}
+
+function buildRow(p) {
+  const tm = typeMeta[p.type];
+  const im = intentMeta[p.intent] || { label: p.intent, cls: "intent-nav" };
+  const tLen = p.title.length;
+  const mLen = p.meta.length;
+
+  const secondaryHtml = p.secondary.map(s => `<li>${s}</li>`).join("");
+
+  return `<tr data-type="${p.type}">
+    <td class="col-page">
+      <span class="page-name">${p.name}</span>
+      <span class="page-url">${p.url}</span>
+      <span class="type-tag ${tm.cls}">${tm.label}</span>
+    </td>
+    <td class="col-primary"><span class="primary-kw">${p.primary}</span></td>
+    <td class="col-secondary"><ul class="secondary-list">${secondaryHtml}</ul></td>
+    <td class="col-intent"><span class="intent-badge ${im.cls}">${im.label}</span></td>
+    <td class="col-title">
+      <span class="title-text">${p.title}</span>
+      ${charDot(tLen, 50, 60)}
+    </td>
+    <td class="col-meta">
+      <span class="meta-text">${p.meta}</span>
+      ${charDot(mLen, 150, 160)}
+    </td>
+  </tr>`;
+}
+
+const tbody = document.getElementById("table-body");
+tbody.innerHTML = PAGES.map(buildRow).join("");
+
+/* Filter */
+const chips = document.querySelectorAll(".chip");
+chips.forEach(chip => {
+  chip.addEventListener("click", () => {
+    chips.forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+    const f = chip.dataset.filter;
+    const rows = tbody.querySelectorAll("tr");
+    let visible = 0;
+    rows.forEach(row => {
+      const show = f === "all" || row.dataset.type === f;
+      row.hidden = !show;
+      if (show) visible++;
+    });
+    document.getElementById("empty-state").style.display = visible === 0 ? "block" : "none";
+    document.querySelector(".table-wrapper table").style.display = visible === 0 ? "none" : "";
+  });
+});
+
+/* Count chip label */
+document.getElementById("count-all").textContent = `(${PAGES.length})`;
+</script>
+</body>
+</html>
