@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Allow cleartext only for SIP signalling to voipinfotech domains -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">voipinfotech.com</domain>
+        <domain includeSubdomains="true">sip.voipinfotech.com</domain>
+    </domain-config>
+    <!-- All other traffic must use TLS -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

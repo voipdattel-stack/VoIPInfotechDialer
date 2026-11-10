@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.VoIPInfotech" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/amber</item>
+        <item name="colorPrimaryVariant">@color/amber_dark</item>
+        <item name="colorOnPrimary">@color/brand_dark</item>
+        <item name="colorSecondary">@color/amber</item>
+        <item name="colorOnSecondary">@color/brand_dark</item>
+        <item name="android:colorBackground">@color/brand_dark</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorOnBackground">@color/text_primary</item>
+        <item name="android:windowBackground">@color/brand_dark</item>
+        <item name="android:statusBarColor">@color/brand_dark</item>
+        <item name="android:navigationBarColor">@color/surface</item>
+    </style>
+
+    <style name="Theme.Splash" parent="Theme.VoIPInfotech">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="KeypadButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:minHeight">64dp</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="backgroundTint">@color/surface</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+</resources>

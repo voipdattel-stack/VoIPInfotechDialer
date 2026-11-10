@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- VoIP Infotech signal-wave logo mark -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="96dp"
+    android:viewportWidth="96"
+    android:viewportHeight="96">
+
+    <!-- Outer ring -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#F5A623"
+        android:strokeWidth="4"
+        android:pathData="M48,10 A38,38 0 1,1 47.9,10" />
+
+    <!-- Signal wave bars (centered) -->
+    <!-- Bar 1 (shortest, left) -->
+    <rect android:fillColor="#F5A623" android:x="22" android:y="52" android:width="8" android:height="16" android:rx="3" />
+    <!-- Bar 2 -->
+    <rect android:fillColor="#F5A623" android:x="34" android:y="40" android:width="8" android:height="28" android:rx="3" />
+    <!-- Bar 3 (tallest, center) -->
+    <rect android:fillColor="#F5A623" android:x="46" android:y="28" android:width="8" android:height="40" android:rx="3" />
+    <!-- Bar 4 -->
+    <rect android:fillColor="#F5A623" android:x="58" android:y="40" android:width="8" android:height="28" android:rx="3" />
+    <!-- Bar 5 (shortest, right) -->
+    <rect android:fillColor="#F5A623" android:x="70" android:y="52" android:width="8" android:height="16" android:rx="3" />
+
+</vector>

@@ -1,0 +1,6 @@
+-keep class org.linphone.** { *; }
+-keep class org.linphone.core.** { *; }
+-dontwarn org.linphone.**
+-keep class com.voipinfotech.dialer.** { *; }
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable

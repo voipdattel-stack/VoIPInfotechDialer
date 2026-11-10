@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand -->
+    <color name="brand_dark">#0D0C09</color>
+    <color name="surface">#1C1916</color>
+    <color name="surface2">#2E2A22</color>
+    <color name="amber">#F5A623</color>
+    <color name="amber_dark">#D4860A</color>
+
+    <!-- Semantic -->
+    <color name="green">#4ADE80</color>
+    <color name="red">#F87171</color>
+
+    <!-- Text -->
+    <color name="text_primary">#EDE8D8</color>
+    <color name="text_secondary">#9B9282</color>
+
+    <!-- Bottom nav selector states -->
+    <color name="bottom_nav_active">@color/amber</color>
+    <color name="bottom_nav_inactive">@color/text_secondary</color>
+</resources>

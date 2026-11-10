@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VoIP Infotech</string>
+    <string name="tab_dialer">Dialer</string>
+    <string name="tab_recents">Recents</string>
+    <string name="tab_settings">Settings</string>
+    <string name="register">Register</string>
+    <string name="unregister">Unregister</string>
+    <string name="registered">Registered</string>
+    <string name="not_registered">Not Registered</string>
+    <string name="incoming_call">Incoming Call</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
+    <string name="end_call">End Call</string>
+    <string name="mute">Mute</string>
+    <string name="unmute">Unmute</string>
+    <string name="speaker">Speaker</string>
+    <string name="earpiece">Earpiece</string>
+    <string name="calling">Calling…</string>
+    <string name="in_call">In Call</string>
+    <string name="no_recents">No recent calls</string>
+    <string name="permission_required">Microphone permission is required to make calls</string>
+    <string name="sip_connection_active">SIP connection active</string>
+</resources>

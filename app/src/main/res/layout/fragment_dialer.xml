@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/brand_dark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Number display row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="24dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tv_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:hint="Enter number"
+                android:textColorHint="@color/text_secondary"
+                android:textColor="@color/text_primary"
+                android:textSize="32sp" />
+
+            <ImageButton
+                android:id="@+id/btn_backspace"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_backspace"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:tint="@color/text_secondary"
+                android:contentDescription="Backspace" />
+        </LinearLayout>
+
+        <!-- Keypad rows -->
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:layout_marginTop="24dp">
+            <Button android:id="@+id/key1" style="@style/KeypadButton" android:layout_width="0dp" android:layout_weight="1" android:text="1" />
+            <Button android:id="@+id/key2" style="@style/KeypadButton" android:layout_width="0dp" android:layout_weight="1" android:text="2" />
+            <Button android:id="@+id/key3" style="@style/KeypadButton" android:layout_width="0dp" android:layout_weight="1" android:text="3" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:layout_marginTop="8dp">
+            <Button android:id="@+id/key4" style="@style/KeypadButton" android:layout_width="0dp" android:layout_weight="1" android:text="4" />
+            <Button android:id="@+id/key5" style="@style/KeypadButton" android:layout_width="0dp" android:layout_weight="1" android:text="5" />
+            <Button android:id="@+id/key6" style="@style/KeypadButton" android:layout_width="0dp" android:layout_weight="1" android:text="6" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:layout_marginTop="8dp">
+            <Button android:id="@+id/key7" style="@style/KeypadButton" android:layout_width="0dp" android:layout_weight="1" android:text="7" />
+            <Button android:id="@+id/key8" style="@style/KeypadButton" android:layout_width="0dp" android:layout_weight="1" android:text="8" />
+            <Button android:id="@+id/key9" style="@style/KeypadButton" android:layout_width="0dp" android:layout_weight="1" android:text="9" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:layout_marginTop="8dp">
+            <Button android:id="@+id/key_star" style="@style/KeypadButton" android:layout_width="0dp" android:layout_weight="1" android:text="*" />
+            <Button android:id="@+id/key0"    style="@style/KeypadButton" android:layout_width="0dp" android:layout_weight="1" android:text="0" />
+            <Button android:id="@+id/key_hash" style="@style/KeypadButton" android:layout_width="0dp" android:layout_weight="1" android:text="#" />
+        </LinearLayout>
+
+        <!-- Call button -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/ic_call"
+            android:contentDescription="Call"
+            app:backgroundTint="@color/green"
+            app:fabSize="normal" />
+
+    </LinearLayout>
+</ScrollView>
